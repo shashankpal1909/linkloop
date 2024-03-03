@@ -1,3 +1,6 @@
+/**
+ * Import dependencies
+ */
 import "express-async-errors";
 
 import { json } from "body-parser";
@@ -6,9 +9,17 @@ import express from "express";
 
 import { errorHandler, NotFoundError } from "@linkloop/common";
 
-import { followAcceptRouter, followRejectRouter, followRequestRouter } from "./routes/follow";
-import { showProfileRouter } from "./routes/get-profile";
+/**
+ * Import routes
+ */
+import { followAcceptRouter } from "./routes/follow/accept";
+import { followRejectRouter } from "./routes/follow/reject";
+import { followRequestRouter } from "./routes/follow/request";
+import { showProfileRouter } from "./routes/profile/show";
 
+/**
+ * Initialize the express app
+ */
 const app = express();
 app.set("trust proxy", true);
 app.use(json());
@@ -19,15 +30,27 @@ app.use(
   })
 );
 
+/**
+ * Mount routes
+ */
 app.use(showProfileRouter);
-app.use(followRequestRouter);
 app.use(followAcceptRouter);
 app.use(followRejectRouter);
+app.use(followRequestRouter);
 
+/**
+ * Define 404 Not Found handler
+ */
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });
 
+/**
+ * Error handling middleware
+ */
 app.use(errorHandler);
 
+/**
+ * Export the app
+ */
 export { app };

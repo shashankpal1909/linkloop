@@ -12,20 +12,22 @@ spec:
         app: auth
     spec:
       containers:
-      - name: auth
-        image: linkloop.dev:9999/auth
-        env:
-          - name: JWT_KEY
-            valueFrom:
-              secretKeyRef:
-                name: jwt-secret
-                key: JWT_KEY
-          - name: MONGO_URI
-            value: "mongodb://auth-mongo-srv:27017/auth"
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1.0"
+        - name: auth
+          image: linkloop.dev:9999/auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: MONGO_URI
+              value: "mongodb://auth-mongo-srv:27017/auth"
+            - name: AMQP_URL
+              value: "amqp://linkloop:linkloop@rabbitmq-srv:5672"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1.0"
 
 ---
 apiVersion: v1

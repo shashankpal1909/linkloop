@@ -7,8 +7,13 @@ import { BadRequestError, validateRequest } from "@linkloop/common";
 import { User } from "../models/user";
 import { Password } from "../services/password";
 
+// Create an Express router
 const router = express.Router();
 
+/**
+ * Route handler for user sign-in.
+ * Validates user input, checks credentials, generates a JWT, and sets it in the session.
+ */
 router.post(
   "/api/auth/signin",
   [
@@ -19,32 +24,34 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
+    // Check if user exists
     const existingUser = await User.findOne({ email });
-
     if (!existingUser) {
       throw new BadRequestError("Invalid Login Credentials");
     }
 
+    // Compare passwords
     const passwordsMatch = await Password.compare(
       existingUser.password,
       password
     );
-
     if (!passwordsMatch) {
       throw new BadRequestError("Invalid Login Credentials");
     }
 
-    // Generate a JWT
+    // Generate a JWT (JSON Web Token)
     const userJWT = jwt.sign(
       { id: existingUser._id, email: existingUser.email },
       process.env.JWT_KEY!
     );
 
-    // Store it on session object
+    // Store the JWT on the session object
     req.session = { jwt: userJWT };
 
+    // Send a successful response
     res.status(200).send(existingUser);
   }
 );
 
+// Export the router
 export { router as signInRouter };

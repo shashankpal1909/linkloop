@@ -12,20 +12,20 @@ spec:
         app: rabbitmq
     spec:
       containers:
-      - name: rabbitmq
-        image: rabbitmq:management
-        ports:
-          - containerPort: 5672
-          - containerPort: 15672
-        env:
-          - name: RABBITMQ_DEFAULT_USER
-            value: linkloop
-          - name: RABBITMQ_DEFAULT_PASS
-            value: linkloop
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1.0"
+        - name: rabbitmq
+          image: rabbitmq:management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: linkloop
+            - name: RABBITMQ_DEFAULT_PASS
+              value: linkloop
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1.0"
 
 ---
 apiVersion: v1

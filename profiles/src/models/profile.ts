@@ -13,14 +13,14 @@ interface ProfileAttrs {
 }
 
 /**
- * An interface that describes the properties that a User model has.
+ * An interface that describes the properties that a Profile model has.
  */
 interface ProfileModel extends mongoose.Model<ProfileDoc> {
   build(attrs: ProfileAttrs): ProfileDoc;
 }
 
 /**
- * An interface that describes the properties that a User Document has.
+ * An interface that describes the properties that a Profile Document has.
  */
 export interface ProfileDoc extends mongoose.Document {
   userName: string;
@@ -33,6 +33,9 @@ export interface ProfileDoc extends mongoose.Document {
   profilePictureURL?: string;
 }
 
+/**
+ * Schema for the profile collection
+ */
 const profileSchema = new mongoose.Schema(
   {
     userName: {
@@ -81,7 +84,8 @@ const profileSchema = new mongoose.Schema(
 );
 
 /**
- * A static method that creates a new Profile document based on the provided attributes.
+ * Builds a new profile document
+ * @param attrs - attributes for the profile document
  */
 profileSchema.statics.build = (attrs: ProfileAttrs): ProfileDoc => {
   return new Profile({
@@ -98,7 +102,7 @@ profileSchema.statics.build = (attrs: ProfileAttrs): ProfileDoc => {
 };
 
 /**
- * The Profile model.
+ * Model for the profile collection
  */
 const Profile = mongoose.model<ProfileDoc, ProfileModel>(
   "Profile",

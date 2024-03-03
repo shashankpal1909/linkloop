@@ -12,12 +12,12 @@ spec:
         app: auth-mongo
     spec:
       containers:
-      - name: auth-mongo
-        image: mongo
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1.0"
+        - name: auth-mongo
+          image: mongo
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1.0"
 
 ---
 apiVersion: v1

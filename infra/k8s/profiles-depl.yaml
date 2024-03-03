@@ -12,20 +12,22 @@ spec:
         app: profiles
     spec:
       containers:
-      - name: profiles
-        image: linkloop.dev:9999/profiles
-        env:
-          - name: JWT_KEY
-            valueFrom:
-              secretKeyRef:
-                name: jwt-secret
-                key: JWT_KEY
-          - name: MONGO_URI
-            value: "mongodb://profiles-mongo-srv:27017/profiles"
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1.0"
+        - name: profiles
+          image: linkloop.dev:9999/profiles
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: MONGO_URI
+              value: "mongodb://profiles-mongo-srv:27017/profiles"
+            - name: AMQP_URL
+              value: "amqp://linkloop:linkloop@rabbitmq-srv:5672"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1.0"
 
 ---
 apiVersion: v1

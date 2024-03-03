@@ -8,8 +8,14 @@ import { amqpWrapper } from "../amqp-wrapper";
 import { UserCreatedPublisher } from "../events/publishers/user-created-publisher";
 import { User } from "../models/user";
 
+// Create an Express router
 const router = express.Router();
 
+/**
+ * Route handler for user sign-up.
+ * Validates user input, checks for existing users, creates a new user,
+ * generates a JSON Web Token (JWT), and publishes a user-created event.
+ */
 router.post(
   "/api/auth/signup",
   [
@@ -28,30 +34,32 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password, fullName, userName } = req.body;
 
+    // Check if email is already in use
     let existingUser = await User.findOne({ email });
-
     if (existingUser) {
       throw new BadRequestError("Email already in use");
     }
 
+    // Check if username is already in use
     existingUser = await User.findOne({ userName });
-
     if (existingUser) {
       throw new BadRequestError("Username already in use");
     }
 
+    // Create a new user
     const user = User.build({ email, password, fullName, userName });
     await user.save();
 
-    // Generate a JWT
+    // Generate a JWT (JSON Web Token)
     const userJWT = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_KEY!
     );
-    debugger;
-    // Store it on session object
+
+    // Store the JWT on the session object
     req.session = { jwt: userJWT };
 
+    // Publish a user-created event
     new UserCreatedPublisher(
       amqpWrapper.connection,
       amqpWrapper.channel
@@ -62,8 +70,10 @@ router.post(
       userName: user.userName,
     });
 
+    // Send a successful response
     res.status(201).send(user);
   }
 );
 
+// Export the router
 export { router as signUpRouter };

@@ -9,27 +9,27 @@ metadata:
     name: ingress-service
 spec:
   rules:
-  - host: linkloop.dev
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/api/auth/?(.*)"
-        backend:
-          service:
-            name: auth-srv
-            port: 
-              number: 3000
-      - pathType: Prefix
-        path: "/api/profile/?(.*)"
-        backend:
-          service:
-            name: profiles-srv
-            port: 
-              number: 3000
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: rabbitmq-srv
-            port:
-              number: 15672
+    - host: linkloop.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/api/auth/?(.*)"
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: "/api/profile/?(.*)"
+            backend:
+              service:
+                name: profiles-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: rabbitmq-srv
+                port:
+                  number: 15672
