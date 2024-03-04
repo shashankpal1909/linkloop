@@ -26,6 +26,9 @@ spec:
                 name: profiles-srv
                 port:
                   number: 3000
+    - host: amqp.linkloop.dev
+      http:
+        paths:
           - pathType: Prefix
             path: "/"
             backend:
@@ -33,3 +36,23 @@ spec:
                 name: rabbitmq-srv
                 port:
                   number: 15672
+    - host: minio.linkloop.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: minio-srv
+                port:
+                  number: 9000
+    - host: minio-console.linkloop.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: minio-srv
+                port:
+                  number: 9001

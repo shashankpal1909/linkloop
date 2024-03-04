@@ -5,6 +5,7 @@ import {
 } from "@linkloop/common";
 
 import { Follow, FollowDoc, FollowStatus } from "../../models/follow";
+import { Profile } from "../../models/profile";
 
 // Create an Express router
 const router = express.Router();
@@ -44,6 +45,22 @@ router.post(
     // Approve the follow request
     follow.status = FollowStatus.Accepted;
     await follow.save();
+
+    // Get the profiles involved in the follow request
+    const from = await Profile.findById(follow.from);
+    const to = await Profile.findById(follow.to);
+
+    if (!from || !to) {
+      throw new NotFoundError();
+    }
+
+    // Update following count for `from` profile
+    from.following++;
+    await from.save();
+
+    // Update followers count for `to` profile
+    to.followers++;
+    await to.save();
 
     // Send the updated follow request as the response
     res.send(follow);
