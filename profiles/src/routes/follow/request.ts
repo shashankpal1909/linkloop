@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
 
-import { BadRequestError, currentUser, NotFoundError, validateRequest } from "@linkloop/common";
+import {
+  BadRequestError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from "@linkloop/common";
 
 import { Follow, FollowStatus } from "../../models/follow";
 import { Profile, ProfileDoc } from "../../models/profile";
@@ -13,7 +18,7 @@ const router = express.Router();
  */
 router.post(
   "/api/profile/:slug/follow",
-  currentUser,
+  requireAuth,
   validateRequest,
   async (req: Request, res: Response) => {
     let profile: ProfileDoc | null;
@@ -32,7 +37,7 @@ router.post(
 
     // If trying to follow own profile, throw a "Bad Request" error
     if (profile.id === req.currentUser?.id) {
-      throw new BadRequestError("You cannot follow yourself.");
+      throw new BadRequestError("You cannot follow/unfollow yourself.");
     }
 
     // Check if there's an existing follow relationship

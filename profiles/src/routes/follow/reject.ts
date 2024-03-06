@@ -1,7 +1,11 @@
 import express, { Request, Response } from "express";
 
 import {
-    BadRequestError, currentUser, NotAuthorizedError, NotFoundError, validateRequest
+  BadRequestError,
+  NotAuthorizedError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
 } from "@linkloop/common";
 
 import { Follow, FollowDoc, FollowStatus } from "../../models/follow";
@@ -12,12 +16,10 @@ const router = express.Router();
 /**
  * Route handler for rejecting a follow request.
  *
- * @param req - the request object
- * @param res - the response object
  */
 router.post(
   "/api/profile/follow/:followId/reject",
-  currentUser,
+  requireAuth,
   validateRequest,
   async (req: Request, res: Response) => {
     let follow: FollowDoc | null;

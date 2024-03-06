@@ -13,14 +13,11 @@ const router = express.Router();
 router.get("/api/profile/:slug", async (req: Request, res: Response) => {
   let profile: ProfileDoc | null;
 
+  // Find the profile by ID or username
   try {
-    // Find the profile by ID or username
     profile = await Profile.findById(req.params.slug);
-    if (!profile) {
-      profile = await Profile.findOne({ userName: req.params.slug });
-    }
   } catch (error) {
-    profile = null;
+    profile = await Profile.findOne({ userName: req.params.slug });
   }
 
   // If profile not found, throw a "Not Found" error
